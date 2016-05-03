@@ -49,7 +49,7 @@ def main():
     logging.basicConfig(level=(logging.WARN if args.quiet else logging.INFO))
 
     resource = Resource(args.url)
-    if args.start != None or args.end != None:
+    if args.start is not None or args.end is not None:
         resource = resource.between(args.start, args.end)
 
     if args.dir:

@@ -39,7 +39,7 @@ class SnapshotView(object):
         else:
             rdp = self.redirect_patterns
 
-            is_redirect = sum(re.search(pat, content) != None
+            is_redirect = sum(re.search(pat, content) is not None
                 for pat in rdp) == len(rdp)
 
             if is_redirect:
@@ -49,7 +49,7 @@ class SnapshotView(object):
                 logger.info(log_msg.format(code, loc))
                 return b""
 
-            elif re.search(self.removal_patterns[0], content) == None:
+            elif re.search(self.removal_patterns[0], content) is None:
                 return content
 
             else:
@@ -115,9 +115,9 @@ class Resource(object):
         return [ Snapshot(self, t) for t in self.timestamps ]
     
     def between(self, start=None, end=None):
-        if start != None and not isinstance(start, (str, int)):
+        if start is not None and not isinstance(start, (str, int)):
             raise ValueError("`start` should be a string or integer.")
-        if end != None and not isinstance(end, (str, int)):
+        if end is not None and not isinstance(end, (str, int)):
             raise ValueError("`end` should be a string or integer.")
 
         new = self.__class__(self.url)
@@ -125,8 +125,8 @@ class Resource(object):
 
         def test_timestamp(t):
             return (
-                ((t >= str(start)) or start == None) and 
-                ((t <= str(end)) or end == None)
+                ((t >= str(start)) or start is None) and
+                ((t <= str(end)) or end is None)
             )
 
         new._timestamps = list(filter(test_timestamp, timestamps))
@@ -139,11 +139,11 @@ class Resource(object):
         prefix=None,
         suffix=None):
 
-        if prefix == None:
+        if prefix is None:
             chunk = self.full_url[len(self.parsed_url.scheme)+3:] 
             prefix = re.sub(r"[^a-zA-Z0-9]+", "-", chunk).strip("-") + "-"
 
-        if suffix == None:
+        if suffix is None:
             base, ext = os.path.splitext(self.parsed_url.path)
             if ext == "":
                 suffix = ".html"
